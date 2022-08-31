@@ -1,0 +1,24 @@
+{
+  "name": "gate-seeker_v1_discord",
+  "version": "1.0.0",
+  "description": "Bot for information about Epic7",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Melissa Gries <CadenEras>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/CadenEras/Gate-Seeker-Discord/issues"
+  },
+  "homepage": "https://github.com/CadenEras/Gate-Seeker-Discord/blob/main/README.md",
+  "dependencies": {
+    "@discordjs/rest": "^1.0.1",
+    "@sentry/node": "^7.10.0",
+    "@sentry/tracing": "^7.10.0",
+    "discord-api-types": "^0.37.1",
+    "discord.js": "^14.1.2",
+    "node.js": "^0.0.1-security",
+    "prettier": "^2.7.1"
+  }
+}
