@@ -2,16 +2,16 @@
 
 /*
  *
- * Gate-Seeker, search bot for Epic Seven Game (This my bot,not the official one !!!)
+ * Gate-Seeker, search bot for Epic Seven Game (This a fan-made bot,not the official one !!!)
  * Created on August 2022 under GNU GPL v3 License
  * by Melissa Gries (CadenEras) CadenEras#2020(795326819346808832)
  *
  */
 
 //This is the start, nothing above, everything below !
-const Discord = require("discord.js");
-//use this line if Structures are used
-//const Client = require( "./Structures/client" );
+
+const Client = require( "./Structures/client" );
+const mongoose = require("mongoose");
 const config = require( "./Config/config.json" );
 const fs = require( "fs" );
 
@@ -29,7 +29,7 @@ const currentDate = new Date(time).toISOString();
 
 //Initializing Sentry connection
 Sentry.init( {
-	dsn: config.dsnSentry,
+	dsn: config.dnsSentry,
 	integrations: [
 		new Tracing.Integrations.Mongo( {
 			useMongoose: true,
@@ -51,8 +51,25 @@ Sentry.configureScope( ( scope ) => {
 
 //And then try everything here
 try {
+	//connecting to the database
+	mongoose.connect(config.mongo, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		keepAlive: true,
+		keepAliveInitialDelay: 300000,
+	});
+
+	//Catching Mongo events
+	mongoose.connection.on("connected", () => {
+		streamKonsole.log(`${currentDate} => Gate-Keeper is now connected to the database !`);
+	});
+
+	mongoose.connection.on("disconnected", () => {
+		streamKonsole.log(`${currentDate} => Gate-Keeper has disconnected from the database !`);
+	});
+
 	//Starting and creating the client
-	const client = new Discord.Client({intents : [1, 2, 64, 4, 512, 16, 32768, 65536]})
+	const client = new Client({intents : [1, 2, 64, 4, 512, 16, 32768, 65536]})
 
 
 	client.on('interactionCreate', async interaction => {
@@ -73,6 +90,7 @@ try {
 	Sentry.captureException( e );
 } finally {
 	transaction.finish();
+	streamKonsole.log("Connection to MongoDB successfully established !");
 	streamKonsole.log( "Connection to Sentry successfully established !" );
 }
 
